@@ -61,7 +61,7 @@ static void FootClass_Initialize_Passengers(FootClass* this_ptr, TechnoTypeClass
             auto const technotype = technotypeext->InitPassengers[i];
             auto const rtti = technotype->Kind_Of();
 
-            if (rtti != RTTI_INFANTRYTYPE ||
+            if (rtti != RTTI_INFANTRYTYPE &&
                 rtti != RTTI_UNITTYPE) {
                 continue;
             }

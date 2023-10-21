@@ -66,7 +66,9 @@ TechnoTypeClassExtension::TechnoTypeClassExtension(const TechnoTypeClass *this_p
     VoiceDeploy(),
     VoiceHarvest(),
     IdleRate(0),
-    CameoImageSurface(nullptr)
+    CameoImageSurface(nullptr),
+    InitPassengerNums(),
+    InitPassengers()
 {
     //if (this_ptr) EXT_DEBUG_TRACE("TechnoTypeClassExtension::TechnoTypeClassExtension - Name: %s (0x%08X)\n", Name(), (uintptr_t)(This()));
 }
@@ -265,6 +267,12 @@ bool TechnoTypeClassExtension::Read_INI(CCINIClass &ini)
 
     IdleRate = ini.Get_Int(ini_name, "IdleRate", IdleRate);
     IdleRate = ArtINI.Get_Int(graphic_name, "IdleRate", IdleRate);
+
+    /**
+     * Fetch initial passenger data.
+     */
+    InitPassengers = ini.Get_TechnoTypes(ini_name, "InitPassengers", InitPassengers);
+    InitPassengerNums = ini.Get_Integers(ini_name, "InitPassengersNum", InitPassengerNums);
 
     /**
      *  Fetch the cameo image surface if it exists.

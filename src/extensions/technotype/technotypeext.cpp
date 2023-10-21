@@ -114,6 +114,13 @@ HRESULT TechnoTypeClassExtension::Load(IStream *pStm)
         return E_FAIL;
     }
 
+    InitPassengers.Clear();
+    InitPassengerNums.Clear();
+
+
+    InitPassengers.Load(pStm);
+    InitPassengerNums.Load(pStm);
+
     VINIFERA_SWIZZLE_REQUEST_POINTER_REMAP(UnloadingClass, "UnloadingClass");
 
     /**
@@ -157,6 +164,9 @@ HRESULT TechnoTypeClassExtension::Save(IStream *pStm, BOOL fClearDirty)
     if (FAILED(hr)) {
         return hr;
     }
+
+    InitPassengers.Save(pStm);
+    InitPassengerNums.Save(pStm);
 
     return hr;
 }
@@ -212,6 +222,8 @@ void TechnoTypeClassExtension::Compute_CRC(WWCRCEngine &crc) const
     crc(ShakePixelXLo);
     crc(SoylentValue);
     crc(IsLegalTargetComputer);
+    crc(InitPassengers.Count());
+    crc(InitPassengerNums.Count());
 }
 
 

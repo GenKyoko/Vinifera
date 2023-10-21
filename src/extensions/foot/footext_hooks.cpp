@@ -40,6 +40,7 @@
 
 #include "hooker.h"
 #include "hooker_macros.h"
+#include "tibsun_defines.h"
 
 /*
 * The Foot object initializes the passenger.
@@ -48,7 +49,7 @@
 * 
 * @author: RossinCarlinx
 */
-static void FootClass_Initialize_Passengers(FootClass* this_ptr, TechnoTypeClassExtension* technotypeext) {
+static void __stdcall FootClass_Initialize_Passengers(FootClass* this_ptr, TechnoTypeClassExtension* technotypeext) {
     auto const Count = technotypeext->InitPassengers.Count();
     // Check if the initial number of passenger types is greater than 0.
     if (Count > 0) {
@@ -73,7 +74,7 @@ static void FootClass_Initialize_Passengers(FootClass* this_ptr, TechnoTypeClass
             // A loop that creates objects and puts them into the position of passengers.
             do {
                 auto const object = technotype->Create_One_Of(house);
-                auto const passenger = static_cast<FootClass*>(object);
+                auto const passenger = object->As_Foot();
                 if (!passenger) {
                     Fatal("*Error* Object creation failed.\n\tWhere the error occurred: \n\FootClass_Initialize_Passengers\n");
                 }
@@ -94,7 +95,7 @@ static void FootClass_Initialize_Passengers(FootClass* this_ptr, TechnoTypeClass
     }
 }
 DECLARE_PATCH(_FootClass_Initialize_Passengers_Patch) {
-    GET_REGISTER_STATIC(FootClass*, this_ptr, esi);
+    GET_REGISTER_STATIC(FootClass*, this_ptr, edi);
     static TechnoClassExtension* technoclassext;
     static TechnoTypeClassExtension* technotypeext;
 

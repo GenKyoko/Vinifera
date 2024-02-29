@@ -39,8 +39,9 @@
  *
  * @author: RossinCarlinx
  */
-void __stdcall FootClassExtension::InitialPassenger(TechnoTypeClassExtension* technotypeext) {
+void __stdcall FootClassExtension::InitialPassenger() {
     FootClass* const pFoot = this->This();
+    TechnoTypeClassExtension* technotypeext = Extension::Fetch<TechnoTypeClassExtension>(pFoot->Techno_Type_Class());
     int const Count = technotypeext->InitPassengers.Count();
     // Check if the initial number of passenger types is greater than 0.
     if (Count > 0) {

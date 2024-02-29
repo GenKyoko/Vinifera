@@ -49,7 +49,7 @@ DECLARE_PATCH(_FootClass_Initialize_Passengers_Patch) {
     static TechnoTypeClassExtension* technotypeext;
 
     footclassext = Extension::Fetch<FootClassExtension>(this_ptr);
-    technotypeext = Extension::Fetch<TechnoTypeClassExtension>(this_ptr->Techno_Type_Class());
+    //technotypeext = Extension::Fetch<TechnoTypeClassExtension>(this_ptr->Techno_Type_Class());
     
     // Original location code.
     if (!this_ptr->Locomotion) {
@@ -63,7 +63,7 @@ DECLARE_PATCH(_FootClass_Initialize_Passengers_Patch) {
 
     footclassext->IsInitialized = true;
 
-    footclassext->InitialPassenger(technotypeext);
+    footclassext->InitialPassenger();
 
 normal:
     JMP(0x004A2CA0);

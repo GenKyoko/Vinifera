@@ -77,7 +77,7 @@ class TechnoClassExtension : public RadioClassExtension
         /**
          * Is the object appearing for the first time?
          */
-        bool Initialized;
+        bool IsInitialized;
 };
 
 

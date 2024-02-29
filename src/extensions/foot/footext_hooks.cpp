@@ -27,6 +27,7 @@
  ******************************************************************************/
 #include "footext_hooks.h"
 #include "foot.h"
+#include "footext.h"
 #include "technoext.h"
 #include "technotype.h"
 #include "technotypeext.h"
@@ -42,64 +43,12 @@
 #include "hooker_macros.h"
 #include "tibsun_defines.h"
 
-/*
-* The Foot object initializes the passenger.
-* 
-* Injection objective function: FootClass::Unlimbo
-* 
-* @author: RossinCarlinx
-*/
-static void __stdcall FootClass_Initialize_Passengers(FootClass* this_ptr, TechnoTypeClassExtension* technotypeext) {
-    auto const Count = technotypeext->InitPassengers.Count();
-    // Check if the initial number of passenger types is greater than 0.
-    if (Count > 0) {
-
-        auto const house = this_ptr->House;
-        // Iterates through objects in InitPassenger, adding them if they are infantry or units.
-        for (int i = 0;
-            i < Count;
-            i++) {
-            auto const technotype = technotypeext->InitPassengers[i];
-            auto const rtti = technotype->Kind_Of();
-
-            if (rtti != RTTI_INFANTRYTYPE &&
-                rtti != RTTI_UNITTYPE) {
-                continue;
-            }
-
-            auto num = (technotypeext->InitPassengerNums.Count() > i) ?
-                technotypeext->InitPassengerNums[i] :
-                1;
-
-            // A loop that creates objects and puts them into the position of passengers.
-            do {
-                auto const object = technotype->Create_One_Of(house);
-                auto const passenger = object->As_Foot();
-                if (!passenger) {
-                    Fatal("*Error* Object creation failed.\n\tWhere the error occurred: \n\FootClass_Initialize_Passengers\n");
-                }
-
-                // Prevent the generation of initial occupants indefinitely.
-                if (passenger->Class_Of() == this_ptr->Class_Of()) {
-                    Extension::Fetch<TechnoClassExtension>(passenger)->Initialized = true;
-                }
-
-                passenger->Set_Coord(this_ptr->Get_Coord());
-                passenger->Limbo();
-                this_ptr->Cargo.Attach(passenger);
-#ifndef NDEBUG
-                Vinifera_Output_Debug_String("this_ptr->Cargo.Attach();");
-#endif
-            } while (--num > 0);
-        }
-    }
-}
 DECLARE_PATCH(_FootClass_Initialize_Passengers_Patch) {
     GET_REGISTER_STATIC(FootClass*, this_ptr, edi);
-    static TechnoClassExtension* technoclassext;
+    static FootClassExtension* footclassext;
     static TechnoTypeClassExtension* technotypeext;
 
-    technoclassext = Extension::Fetch<TechnoClassExtension>(this_ptr);
+    footclassext = Extension::Fetch<FootClassExtension>(this_ptr);
     technotypeext = Extension::Fetch<TechnoTypeClassExtension>(this_ptr->Techno_Type_Class());
     
     // Original location code.
@@ -108,14 +57,13 @@ DECLARE_PATCH(_FootClass_Initialize_Passengers_Patch) {
     }
 
     // If it has already been initialized, it is automatically skipped.
-    if (technoclassext->Initialized) {
+    if (footclassext->IsInitialized) {
         goto normal;
     }
 
-    technoclassext->Initialized = true;
+    footclassext->IsInitialized = true;
 
-    // Perform initialization of passengers.
-    FootClass_Initialize_Passengers(this_ptr, technotypeext);
+    footclassext->InitialPassenger(technotypeext);
 
 normal:
     JMP(0x004A2CA0);

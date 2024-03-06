@@ -494,11 +494,17 @@ DECLARE_PATCH(_BuildingClass_Draw_Spied_Cameo_Palette_Patch)
     JMP(0x00428B13);
 }
 
-
+/*
+*   When the funds are insufficient, the player's building repair behavior.
+* 
+*   Author: RossinCarlinx
+*/
 DECLARE_PATCH(_BuildingClass_Repair_AI_Avaliable_Insufficient_Funds) {
     GET_REGISTER_STATIC(BuildingClass*, this_ptr, esi);
+
     if (RuleExtension->AllowRepairInInsufficientFunding)
         this_ptr->IsRepairing = false;
+
     JMP(0x00435A3F);
 }
 

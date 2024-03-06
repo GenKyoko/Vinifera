@@ -68,13 +68,14 @@
  *  
  *  @author: CCHyper
  */
-RulesClassExtension::RulesClassExtension(const RulesClass *this_ptr) :
+RulesClassExtension::RulesClassExtension(const RulesClass* this_ptr) :
     GlobalExtensionClass(this_ptr),
     IsMPAutoDeployMCV(false),
     IsMPPrePlacedConYards(false),
     IsBuildOffAlly(true),
     IsShowSuperWeaponTimers(true),
-    IceStrength(0)
+    IceStrength(0),
+    AllowRepairInInsufficientFunding(false)
 {
     //if (this_ptr) EXT_DEBUG_TRACE("RulesClassExtension::RulesClassExtension - 0x%08X\n", (uintptr_t)(ThisPtr));
 
@@ -191,6 +192,7 @@ void RulesClassExtension::Compute_CRC(WWCRCEngine &crc) const
     crc(IsBuildOffAlly);
     crc(IsShowSuperWeaponTimers);
     crc(IceStrength);
+    crc(AllowRepairInInsufficientFunding);
 }
 
 
@@ -281,6 +283,8 @@ void RulesClassExtension::Process(CCINIClass &ini)
     MPlayer(ini);
     AudioVisual(ini);
     CombatDamage(ini);
+
+    SpecificOptions(ini);
 
     /**
      *  Process the objects (extension classes).
@@ -540,6 +544,18 @@ bool RulesClassExtension::Weapons(CCINIClass &ini)
     }
 
     return counter > 0;
+}
+
+/*
+*   Read in special global settings.
+*   Author: RossinCarlinx
+*/
+bool RulesClassExtension::SpecificOptions(CCINIClass& ini) {
+    static const char* const section = "SpecificOptions";
+
+    AllowRepairInInsufficientFunding = ini.Get_Bool(section, "AllowRepairInInsufficientFunding", false);
+
+    return true;
 }
 
 

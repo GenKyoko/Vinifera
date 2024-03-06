@@ -47,6 +47,7 @@
 #include "convert.h"
 #include "drawshape.h"
 #include "rules.h"
+#include "rulesext.h"
 #include "voc.h"
 #include "iomap.h"
 #include "spritecollection.h"
@@ -54,7 +55,6 @@
 #include "fatal.h"
 #include "asserthandler.h"
 #include "debughandler.h"
-
 #include "hooker.h"
 #include "hooker_macros.h"
 
@@ -495,6 +495,13 @@ DECLARE_PATCH(_BuildingClass_Draw_Spied_Cameo_Palette_Patch)
 }
 
 
+DECLARE_PATCH(_BuildingClass_Repair_AI_Avaliable_Insufficient_Funds) {
+    GET_REGISTER_STATIC(BuildingClass*, this_ptr, esi);
+    if (RuleExtension->AllowRepairInInsufficientFunding)
+        this_ptr->IsRepairing = false;
+    JMP(0x00435A3F);
+}
+
 /**
  *  Main function for patching the hooks.
  */
@@ -514,4 +521,5 @@ void BuildingClassExtension_Hooks()
     Patch_Jump(0x0042E179, &_BuildingClass_Grand_Opening_ProduceCash_Patch);
     Patch_Jump(0x004325F9, &_BuildingClass_Mission_Repair_ReloadRate_Patch);
     Patch_Jump(0x0043266C, &_BuildingClass_Mission_Repair_ReloadRate_Patch);
+    Patch_Jump(0x00435A38, &_BuildingClass_Repair_AI_Avaliable_Insufficient_Funds);
 }

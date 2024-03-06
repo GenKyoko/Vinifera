@@ -66,6 +66,8 @@ class RulesClassExtension final : public GlobalExtensionClass<RulesClass>
         bool CombatDamage(CCINIClass &ini);
         bool Weapons(CCINIClass &ini);
 
+        bool SpecificOptions(CCINIClass &ini);
+
     private:
         void Check();
         void Fixups(CCINIClass &ini);
@@ -97,4 +99,9 @@ class RulesClassExtension final : public GlobalExtensionClass<RulesClass>
          *  to break from a shot.
          */
         int IceStrength;
+
+        /*
+        *   Allowed to continue repairs in case of insufficient funds?
+        */
+        bool AllowRepairInInsufficientFunding;
 };

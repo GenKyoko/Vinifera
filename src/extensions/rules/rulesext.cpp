@@ -68,7 +68,7 @@
  *  
  *  @author: CCHyper
  */
-RulesClassExtension::RulesClassExtension(const RulesClass* this_ptr) :
+RulesClassExtension::RulesClassExtension(const RulesClass *this_ptr) :
     GlobalExtensionClass(this_ptr),
     IsMPAutoDeployMCV(false),
     IsMPPrePlacedConYards(false),
